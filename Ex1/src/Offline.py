@@ -1,6 +1,7 @@
 import csv
 import json
 import sys
+from random import random
 
 import CallForElev
 import ElevDataStructure
@@ -31,18 +32,32 @@ class Offline:
         return self.calls
 
     def allocate(self, callindx):
-        fastest = 0
+        fastest = ((len(self.elevs)+1) *random())
         bestTime = float(sys.float_info.max)
         for i in range(0,len(self.elevs),1):
-            currElevTime = self.time_cal(self.b.Elevators[str(i)], callindx)
+            currElevTime = self.time_cal(self.b.Elevators[str(i)], callindx , False)
             if (currElevTime < bestTime):
                 bestTime = currElevTime
                 fastest = i
+        self.calls[callindx].set_done_time(self.calls[callindx].get_arrive_time()+bestTime)  #make set
+        currElevTime = self.time_cal(self.b.Elevators[str(fastest)], callindx, True)
         self.calls[callindx].allocatedTo = fastest
 
-    def time_cal(self, e:Elevator, callIndx):
+    def time_cal(self, e:Elevator, callIndx:int, flag: bool):
         src = self.calls[callIndx].get_src()
         dst = self.calls[callIndx].get_dst()
+        arriveTime= self.calls[callIndx].get_arrive_time()
+        state = self.calls[callIndx].get_state()
+        for i in range(0, len(self.elevs.get_my_calls),1):   #make get
+            currSrc = self.calls[i].get_src()
+            currDst = self.calls[i].get_dst()
+            currArriveTime = self.calls[i].get_arrive_time()
+            currState = self.calls[i].get_state()
+
+
+
+
+
 
 
 
