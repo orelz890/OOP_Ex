@@ -25,5 +25,8 @@ class callForElev:
     def get_done_time(self):
         return self._doneTime
 
-    def set_allocated(self):
-        return self._allocatedTo
+    def set_allocated(self, allocate:int):
+        self._allocatedTo = allocate
+
+    def set_done_time(self, doneTime):
+        self._doneTime =doneTime
