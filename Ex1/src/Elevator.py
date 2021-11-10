@@ -20,6 +20,7 @@ class Elevator:
                f"close_time: {self.close_time}, open_time: {self.open_time}, start_time: {self.start_time}, " \
                f"stop_time: {self.stop_time}, curr_state: {0}"
 
+
     # def get_id(self):
     #     return self._id;
     #

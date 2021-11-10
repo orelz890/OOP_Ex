@@ -13,11 +13,11 @@ UP: final[int] = 1
 class Structure:
 
     def __init__(self):
-        self.myCalls = []
+        self.my_calls = []
         self.time = 0
-        self.passNum = []
+        self.pass_num = []
         self.state = LEVEL
-        self.currPos = 0
+        self.curr_pos = 0
 
     # def get_my_calls(self):
     #     return self.myCalls

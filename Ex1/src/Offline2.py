@@ -21,7 +21,7 @@ class Offline:
         self.b = Building(buildingName)
         self.calls = InputCalls(callsName).calls
         self.elevs = []
-        for i in range(0, len(self.b.Elevators), 1):
+        for i in range(0, len(self.b.elevators), 1):
             self.elevs.append(ElevDataStructure.Structure.__init__())
         for i in self.calls:
             self.allocate(i)
@@ -34,7 +34,7 @@ class Offline:
         fastest = 0
         bestTime = float(sys.float_info.max)
         for i in range(0, len(self.elevs), 1):
-            currElevTime = self.time_cal(self.b.Elevators[str(i)], callindx)
+            currElevTime = self.time_cal(self.b.elevators[str(i)], callindx)
             if (currElevTime < bestTime):
                 bestTime = currElevTime
                 fastest = i
