@@ -19,28 +19,3 @@ class Elevator:
         return f"id: {self.id}, speed: {self.speed} , min_floor: {self.min_floor}, max_floor: {self.max_floor}, " \
                f"close_time: {self.close_time}, open_time: {self.open_time}, start_time: {self.start_time}, " \
                f"stop_time: {self.stop_time}, curr_state: {0}"
-
-
-    # def get_id(self):
-    #     return self._id;
-    #
-    # def get_speed(self):
-    #     return self._speed;
-    #
-    # def get_min_floor(self):
-    #     return self._minFloor;
-    #
-    # def get_max_floor(self):
-    #     return self._maxFloor;
-    #
-    # def get_close_time(self):
-    #     return self._closeTime;
-    #
-    # def get_open_time(self):
-    #     return self._openTime;
-    #
-    # def get_start_time(self):
-    #     return self._startTime;
-    #
-    # def get_stop_time(self):
-    #     return self._stopTime;
