@@ -28,20 +28,20 @@ class Offline:
             self.allocate(i)
         self.save_to_file("Ex1_Ans")
 
-    def get_calls(self):
-        return self.calls
+    # def get_calls(self):
+    #     return self.calls
 
-    def allocate(self, callindx):
+    def allocate(self, call_indx):
         fastest = ((len(self.elevs)+1) *random())
-        bestTime = float(sys.float_info.max)
+        best_time = float(sys.float_info.max)
         for i in range(0,len(self.elevs),1):
-            currElevTime = self.time_cal(self.b.Elevators[str(i)], callindx , False)
-            if (currElevTime < bestTime):
-                bestTime = currElevTime
+            curr_elev_time = self.time_cal(self.b.Elevators[str(i)], call_indx, False)
+            if (curr_elev_time < best_time):
+                best_time = curr_elev_time
                 fastest = i
-        self.calls[callindx].set_done_time(self.calls[callindx].get_arrive_time()+bestTime)  #make set
-        currElevTime = self.time_cal(self.b.Elevators[str(fastest)], callindx, True)
-        self.calls[callindx].allocatedTo = fastest
+        self.calls[call_indx].set_done_time(self.calls[call_indx].get_arrive_time() + best_time)  #make set
+        curr_elev_time = self.time_cal(self.b.Elevators[str(fastest)], call_indx, True)
+        self.calls[call_indx].allocatedTo = fastest
 
     def time_cal(self, e:Elevator, callIndx:int, flag: bool):
         src = self.calls[callIndx].get_src()
