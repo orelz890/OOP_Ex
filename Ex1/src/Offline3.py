@@ -11,7 +11,6 @@ LEVEL: final[int] = 0
 DOWN: final[int] = -1
 UP: final[int] = 1
 
-
 class Offline:
 
     def __init__(self, building_name: str, calls_name: str):
@@ -38,6 +37,7 @@ class Offline:
         self.calls[call_indx].allocated_to = fastest
 
     def time_cal(self, e: Elevator, elev_indx: int, call_indx: int):
+        total_time_before_change = self.elevs[elev_indx].curr_total_time
         # Checking if the call is in the elev range:
         if (e.min_floor <= self.calls[call_indx].src <= e.max_floor) \
                 and (e.min_floor <= self.calls[call_indx].src <= e.max_floor):
@@ -46,40 +46,58 @@ class Offline:
             # Dealing with the first ever call of this elev
             if self.elevs[elev_indx].state == LEVEL:
                 return self.init_call_cal(src, dst, call_indx, e)
-            # Regular case:
-            total_time = 0
+
+            # Calculating the first movement to on of the edges:
+            # UP case:
             if self.calls[call_indx].state == UP:
+                passenger_num = 0
                 for i in range(self.elevs[elev_indx].init_call.src, len(e.max_floor - e.min_floor), 1):
-                    self.elevs[elev_indx].elev_pos_in_time = \
-                        self.time_cal_helper(self.elevs[elev_indx].elev_pos,i-e.min_floor,0, e)
-                    self.elevs[elev_indx].elev_pos = i-e.min_floor
-
-                    # There are no elements in this cell
-                    if len(self.elevs[elev_indx].call_log[i]) == 0:
-                        continue
-
-                    for j in range(0, len(self.elevs[elev_indx].call_log[i]), 1):
-                        curr_src = self.elevs[elev_indx].call_log[i][j].src
-                        curr_dst = self.elevs[elev_indx].call_log[i][j].dst
-                        if i - e.min_floor == curr_src:
-                            pass
-
-
+                    self.checking_the_call(e, elev_indx, passenger_num, i)
+            # Down case
             else:
+                passenger_num = 0
                 for i in range(self.elevs[elev_indx].init_call.src, 0, -1):
-                    for j in range(0, len(self.elevs[elev_indx].call_log[i]), 1):
-                        curr_src = self.elevs[elev_indx].call_log[i][j].src
-                        curr_dst = self.elevs[elev_indx].call_log[i][j].dst
-
-            total_time += self.back_and_forth_check(self, e, elev_indx, call_indx)
-            return -1
+                    self.checking_the_call(e, elev_indx, passenger_num, i)
+            self.back_and_forth_check(e, elev_indx, call_indx)
+            return self.elevs[elev_indx].curr_total_time - total_time_before_change
         # If the call is not in the elev range:
         else:
             return sys.float_info.max
 
-    def back_and_forth_check(self, e: Elevator, elev_indx: int, call_indx: int):
+    # Checking the call and its addition to the time cal
+    def checking_the_call(self, e: Elevator, elev_indx: int, passenger_num: int, i: int):
+        self.elevs[elev_indx].elev_pos_in_time = \
+            self.time_cal_helper(self.elevs[elev_indx].elev_pos, i - e.min_floor, 0, e)
+        self.elevs[elev_indx].elev_pos = i - e.min_floor
 
-        return -1
+        # There are no elements in this cell
+        if len(self.elevs[elev_indx].call_log[i]) == 0:
+            return
+
+        for j in range(0, len(self.elevs[elev_indx].call_log[i]), 1):
+            # Checking if the caller can catch the elev in time
+            if self.elevs[elev_indx].elev_pos_in_time >= self.elevs[elev_indx].call_log[i][j].arrive:
+                curr_src = self.elevs[elev_indx].call_log[i][j].src
+                curr_dst = self.elevs[elev_indx].call_log[i][j].dst
+                # If the call is here because its src is in the current pos of the elev:
+                if i - e.min_floor == curr_src:
+                    self.elevs[elev_indx].call_log[i][j].going_to_dst == 1
+                    passenger_num += 1
+                    self.elevs[elev_indx].elev_pos_in_time += self.time_cal_helper(0, 0, passenger_num, e)
+                    self.elevs[elev_indx].curr_total_time += self.elevs[elev_indx].elev_pos_in_time \
+                                                             + self.time_cal_helper(0, 0, passenger_num, e)
+                    self.elevs[elev_indx].call_log[i][j].going_to_dst = 1
+                # If the call is here because its dst is in the current pos of the elev:
+                elif i - e.min_floor == curr_dst and self.elevs[elev_indx].call_log[i][j].going_to_dst == 1:
+                    self.elevs[elev_indx].elev_pos_in_time += self.time_cal_helper(0, 0, passenger_num, e)
+                    self.elevs[elev_indx].curr_total_time += self.elevs[elev_indx].elev_pos_in_time \
+                                                             + self.time_cal_helper(0, 0, passenger_num, e)
+                    self.elevs[elev_indx].call_log[i][j].done_time = self.elevs[elev_indx].elev_pos_in_time
+                    passenger_num -= 1
+
+    def back_and_forth_check(self, e: Elevator, elev_indx: int, call_indx: int):
+        pass
+
 
     def init_call_cal(self, src: int, dst: int, call_indx: int, e: Elevator):
         to_src = self.time_cal_helper(0, src, 1, e)

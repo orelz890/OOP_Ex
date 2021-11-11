@@ -25,6 +25,7 @@ class Structure:
         self.init_state = UP
         self.min_floor = e.min_floor
         self.max_floor = e.max_floor
+        self.curr_total_time = 0
         self.elev_pos_in_time = 0
         self.elev_pos = 0
         self.call_log = [e.max_floor - e.min_floor]
