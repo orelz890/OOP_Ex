@@ -28,7 +28,7 @@ class Offline:
         fastest = (len(self.elevs) + 1) * random()
         best_time = sys.float_info.max
         for i in range(0, len(self.elevs), 1):
-            curr_elev_time = self.time_cal(self.b.elevators[str(i)], i, call_indx)
+            curr_elev_time = self.time_cal(self.b.elevators[str(i)], i, call_indx, False)
             if curr_elev_time < best_time:
                 best_time = curr_elev_time
                 fastest = i
@@ -41,12 +41,16 @@ class Offline:
         self.elevs[elev_indx].elev_pos = 0
         self.elevs[elev_indx].num_of_done_calls = 0
         self.elevs[elev_indx].passenger_num = 0
+        self.elevs[elev_indx].num_of_calls_added += 1
         self.elevs[elev_indx].call_log[self.calls[call_indx].src].append(self.calls[call_indx])
         self.elevs[elev_indx].call_log[self.calls[call_indx].dst].append(self.calls[call_indx])
-        self.elevs[elev_indx].num_of_calls_added += 1
 
     def time_cal(self, e: Elevator, elev_indx: int, call_indx: int) -> float:
         total_time_before_change = self.elevs[elev_indx].curr_total_time
+        for i in range(0, len(self.elevs[elev_indx].call_log), 1):
+            for j in range(0,len(self.elevs[elev_indx].call_log[i]),1):
+                self.elevs[elev_indx].call_log[i][j].done_time = sys.float_info.max
+                self.elevs[elev_indx].call_log[i][j].going_to_dst = -1
         # Checking if the call is in the elev range:
         if (e.min_floor <= self.calls[call_indx].src <= e.max_floor) \
                 and (e.min_floor <= self.calls[call_indx].src <= e.max_floor):
@@ -54,7 +58,7 @@ class Offline:
             dst = self.calls[call_indx].dst
             # Dealing with the first ever call of this elev
             if self.elevs[elev_indx].state == LEVEL:
-                return self.init_call_cal(src, dst, call_indx, e)
+                return self.init_call_cal(src, dst, call_indx, elev_indx, e)
 
             # Calculating the first movement to one of the edges:
             self.elevs[elev_indx].call_log[self.calls[call_indx].src].append(self.calls[call_indx])
@@ -100,42 +104,47 @@ class Offline:
                 curr_src = self.elevs[elev_indx].call_log[i][j].src
                 curr_dst = self.elevs[elev_indx].call_log[i][j].dst
                 # If the call is here because its src is in the current pos of the elev:
-                if i - e.min_floor == curr_src and self.elevs[elev_indx].call_log[i][j].done_time != sys.float_info.max:
+                if i + e.min_floor == curr_src and self.elevs[elev_indx].call_log[i][j].done_time != sys.float_info.max:
                     self.elevs[elev_indx].call_log[i][j].going_to_dst == 1
                     self.elevs[elev_indx].passenger_num += 1
-                    self.elevs[elev_indx].elev_pos_in_time += self.time_cal_helper(0, 0, self.elevs[elev_indx].passenger_num, e)
+                    self.elevs[elev_indx].elev_pos_in_time += self.time_cal_helper(0, 0,
+                                                                                   self.elevs[elev_indx].passenger_num,
+                                                                                   e)
                     self.elevs[elev_indx].curr_total_time = self.elevs[elev_indx].elev_pos_in_time
 
                     self.elevs[elev_indx].call_log[i][j].going_to_dst = 1
                 # If the call is here because its dst is in the current pos of the elev:
-                elif i - e.min_floor == curr_dst and self.elevs[elev_indx].call_log[i][j].going_to_dst == 1:
-                    self.elevs[elev_indx].elev_pos_in_time += self.time_cal_helper(0, 0, self.elevs[elev_indx].passenger_num, e)
+                elif i + e.min_floor == curr_dst and self.elevs[elev_indx].call_log[i][j].going_to_dst == 1:
+                    self.elevs[elev_indx].elev_pos_in_time += self.time_cal_helper(0, 0,
+                                                                                   self.elevs[elev_indx].passenger_num,
+                                                                                   e)
                     self.elevs[elev_indx].curr_total_time = self.elevs[elev_indx].elev_pos_in_time
-
                     self.elevs[elev_indx].call_log[i][j].done_time = self.elevs[elev_indx].elev_pos_in_time
+                    self.elevs[elev_indx].num_of_done_calls += 1
                     self.elevs[elev_indx].passenger_num -= 1
 
-    def back_and_forth_check(self, e: Elevator, elev_indx: int, call_indx: int, state: int) -> float:
+    def back_and_forth_check(self, e: Elevator, elev_indx: int, call_indx: int, state: int) -> None:
         if self.elevs[elev_indx].num_of_calls_added == self.elevs[elev_indx].num_of_done_calls:
             return
         if state == UP:
-            for i in range(self.elevs[elev_indx].init_call.src, len(e.max_floor - e.min_floor), 1):
+            for i in range(self.elevs[elev_indx].elev_pos, e.max_floor, 1):
                 self.elevs[elev_indx].elev_pos = i
                 self.checking_the_call(e, elev_indx, i)
-                return self.back_and_forth_check(e, elev_indx, call_indx, DOWN)
+            self.back_and_forth_check(e, elev_indx, call_indx, DOWN)
         if state == DOWN:
-            for i in range(self.elevs[elev_indx].init_call.src, 0, -1):
+            for i in range(self.elevs[elev_indx].elev_pos, 0, -1):
                 self.elevs[elev_indx].elev_pos = i
                 self.checking_the_call(e, elev_indx, i)
-                return self.back_and_forth_check(e, elev_indx, call_indx, UP)
+            self.back_and_forth_check(e, elev_indx, call_indx, UP)
 
-    def init_call_cal(self, src: int, dst: int, call_indx: int, e: Elevator) -> float:
+    def init_call_cal(self, src: int, dst: int, call_indx: int,elev_indx: int, e: Elevator) -> float:
         to_src = self.time_cal_helper(0, src, 1, e)
         if to_src < self.calls[call_indx].arrive:
             to_src = 0
         else:
             to_src -= self.calls[call_indx].arrive
         to_dst = self.time_cal_helper(src, dst, 1, e)
+        self.elevs[elev_indx].init_call = self.calls[call_indx]
         return to_src + to_dst
 
     def time_cal_helper(self, src: int, dst: int, pass_num: int, e: Elevator) -> float:
