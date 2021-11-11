@@ -28,9 +28,6 @@ class Offline:
             self.allocate(i)
         writeToFile.Write.save_to_file("Ex1_Ans")
 
-    # def get_calls(self):
-    #     return self.calls
-
     def allocate(self, call_indx):
         fastest = ((len(self.elevs) + 1) * random())
         best_time = sys.float_info.max
@@ -45,7 +42,7 @@ class Offline:
             self.elevs[fastest].my_calls_down.append(self.calls[call_indx])
         else:
             self.elevs[fastest].my_calls_up.append(self.calls[call_indx])
-        self.elevs[fastest].total_time +=best_time
+        self.elevs[fastest].total_up_time +=best_time
 
 
     def time_cal(self, e: Elevator, elev_indx: int, call_indx: int):
@@ -56,9 +53,9 @@ class Offline:
             if self.elevs[elev_indx].my_calls_down[i].done_time < self.calls[call_indx].arrive:
                 self.elevs[elev_indx].my_calls_down.remove(self.elevs[elev_indx].my_calls_down[i])
 
-            # Dealing with an empty elev
-            if len(self.elevs[elev_indx].my_calls_up) == 0:
-                return self.resting(e, elev_indx, call_indx)
+        # Dealing with an empty elev
+        if len(self.elevs[elev_indx].my_calls_up) == 0:
+            return self.resting(e, elev_indx, call_indx)
         # Dealing with regular cases (UP/DOWN)
         if self.elevs[elev_indx].state == UP:
             return self.up_case(e, elev_indx, call_indx)
@@ -90,8 +87,8 @@ class Offline:
                 pass_num += 1
                 pass_num = pass_num if self.calls[i].dst > self.calls[call_indx].src else pass_num - 1
 
-            return self.elevs[elev_indx].total_time + self.time_cal_helper(self.elevs[elev_indx].farthest_dst, src,
-                    pass_num, e) + self.time_cal_helper(src, dst,pass_num, e)
+            return self.elevs[elev_indx].total_up_time + self.time_cal_helper(self.elevs[elev_indx].farthest_dst, src,
+                                                                              pass_num, e) + self.time_cal_helper(src, dst,pass_num, e)
 
     def down_case(self, e: Elevator, elev_indx: int, call_indx: int):
         pass

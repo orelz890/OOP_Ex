@@ -1,4 +1,4 @@
-import Elevator
+from Elevator import Elevator
 import json
 
 
