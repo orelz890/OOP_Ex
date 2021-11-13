@@ -14,7 +14,7 @@ class InputCalls:
                 headers = csv_reader.fieldnames
                 c = []
                 for row in csv_reader:
-                    c.append(callForElev.__init__(row[headers[1]], row[headers[2]], row[headers[3]]))
+                    c.append(callForElev(float(row[headers[1]]), int(row[headers[2]]), int(row[headers[3]])))
                 return c
         except IOError as e:
             print(e)

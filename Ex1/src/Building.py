@@ -1,13 +1,14 @@
 from Elevator import Elevator
 import json
 
+
 class Building:
 
     def __init__(self, file_building: str):
         self.elevators = {}
-        self.max_floor =0
-        self.min_floor =0
-        self.init_from_file(self, file_building)
+        self.max_floor = 0
+        self.min_floor = 0
+        self.init_from_file(file_building)
 
     def __str__(self) -> str:
         ans = f"minFloor: {self.min_floor}, maxFloor: {self.max_floor}, "
@@ -31,8 +32,9 @@ class Building:
                         self.max_floor = v
                         continue
                     for i in v:
-                        elev = Elevator.__init__(**v)
-                        self.elevators += elev
+                        elev = Elevator(i['_id'], i['_speed'], i['_minFloor'], i['_maxFloor'], i['_closeTime'],
+                                        i['_openTime'], i['_startTime'], i['_stopTime'])
+                        self.elevators[i['_id']] = elev
 
         except IOError as e:
             print(e)

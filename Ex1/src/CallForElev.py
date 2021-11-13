@@ -1,10 +1,8 @@
-import csv
 import sys
-from typing import final
 
-LEVEL: final[int] = 0
-DOWN: final[int] = -1
-UP: final[int] = 1
+LEVEL = 0
+DOWN = -1
+UP = 1
 
 
 class callForElev:

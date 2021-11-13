@@ -1,34 +1,34 @@
 import sys
+from os import system
 from random import random
 import ElevDataStructure
-import writeToFile
-from Building import Building
 from Elevator import Elevator
+from Ex1.src import writeToFile
 from InputCalls import InputCalls
-from typing import final
+from Building import Building
 
-LEVEL: final[int] = 0
-DOWN: final[int] = -1
-UP: final[int] = 1
+LEVEL = 0
+DOWN = -1
+UP = 1
 
 
 class Offline:
 
-    def __init__(self, building_name: str, calls_name: str):
-        self.b = Building(building_name)
+    def __init__(self, B: str, calls_name: str, out_name: str):
+        self.b = Building(B)
         self.calls = InputCalls(calls_name).calls
         self.elevs = []
         for i in range(0, len(self.b.elevators), 1):
-            self.elevs.append(ElevDataStructure.Structure.__init__(self.b.elevators[i]))
+            self.elevs.append(ElevDataStructure.Structure(self.b.elevators[i]))
         for i in range(0, len(self.calls), 1):
             self.allocate(i)
-        writeToFile.Write.save_to_file(self.calls, "Ex1_Ans")
+        writeToFile.Write.save_to_file(self.calls, out_name)
 
     def allocate(self, call_indx) -> None:
         fastest = (len(self.elevs) + 1) * random()
-        best_time = sys.float_info.max
+        best_time = sys.maxsize
         for i in range(0, len(self.elevs), 1):
-            curr_elev_time = self.time_cal(self.b.elevators[str(i)], i, call_indx)
+            curr_elev_time = self.time_cal(self.b.elevators[i], i, call_indx)
             if curr_elev_time < best_time:
                 best_time = curr_elev_time
                 fastest = i
@@ -56,6 +56,7 @@ class Offline:
             for j in range(0, len(elev.call_log[i]), 1):
                 elev.call_log[i][j].done_time = sys.float_info.max
                 elev.call_log[i][j].going_to_dst = -1
+
         # Checking if the call is in the elev range:
         if (e.min_floor <= new_call.src <= e.max_floor) \
                 and (e.min_floor <= new_call.src <= e.max_floor):
