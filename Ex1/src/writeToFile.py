@@ -1,11 +1,11 @@
 import csv
 import CallForElev
-from Offline import Offline
+from Offline3 import Offline
 
 class Write:
 
-    def __init__(self, file_name :str):
-        self.calls = Offline.get_calls()
+    def __init__(self, calls: [], file_name: str):
+        self.calls = calls
         self.save_to_file(file_name)
 
     def save_to_file(self, file_name: str) -> None:

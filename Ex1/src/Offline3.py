@@ -22,13 +22,13 @@ class Offline:
             self.elevs.append(ElevDataStructure.Structure.__init__(self.b.elevators[i]))
         for i in range(0, len(self.calls), 1):
             self.allocate(i)
-        writeToFile.Write.save_to_file("Ex1_Ans")
+        writeToFile.Write.save_to_file(self.calls, "Ex1_Ans")
 
     def allocate(self, call_indx) -> None:
         fastest = (len(self.elevs) + 1) * random()
         best_time = sys.float_info.max
         for i in range(0, len(self.elevs), 1):
-            curr_elev_time = self.time_cal(self.b.elevators[str(i)], i, call_indx, False)
+            curr_elev_time = self.time_cal(self.b.elevators[str(i)], i, call_indx)
             if curr_elev_time < best_time:
                 best_time = curr_elev_time
                 fastest = i
@@ -72,7 +72,7 @@ class Offline:
             elev.elev_pos_in_time += self.init_call_cal(elev.init_call.src, elev.init_call.dst, call_indx, elev_indx, e)
             # UP case:
             if self.elevs[elev_indx].state == UP:
-                for i in range(elev.init_call.src, len(e.max_floor - e.min_floor), 1):
+                for i in range(elev.init_call.src, e.max_floor - e.min_floor, 1):
                     elev.elev_pos = i
                     self.checking_the_call(e, elev_indx, i)
                 self.back_and_forth_check(e, elev_indx, call_indx, DOWN)
