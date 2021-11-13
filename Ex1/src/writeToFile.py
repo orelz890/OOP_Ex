@@ -11,7 +11,7 @@ class Write:
             with open(file_name, "w", newline='') as f:
                 fieldnames = ['cul1', 'cul2', 'cul3', 'cul4', 'cul5', 'cul6']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
-                for i in range(0, len(self.calls), 1):
+                for i in range(0, len(self.calls)+1, 1):
                     writer.writerow({'cul1': 'Elevator call', 'cul2': self.calls[i].get_arrive_time(),
                                         'cul3': self.calls[i].get_src(), 'cul4': self.calls[i].get_dst(),
                                         'cul5': 0, 'cul6': self.calls[i].allocatedTo})
