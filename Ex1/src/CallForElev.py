@@ -18,4 +18,7 @@ class callForElev:
         self.allocated_to = -1
 
     def __str__(self):
-        return f"id:{self.id} time:{self.arrive} src:{self.src} dst:{self.dst} allocate:{self.allocated_to}"
+        return f"id:{self.id} time:{self.arrive} src:{self.src} dst:{self.dst} state: {self.state} allocate:{self.allocated_to}"
+
+    def __repr__(self):
+        return f"id:{self.id} time:{self.arrive} src:{self.src} dst:{self.dst} state: {self.state} allocate:{self.allocated_to}"

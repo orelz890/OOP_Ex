@@ -39,6 +39,8 @@ class Offline:
             self.update_fastest(fastest, call_indx)
             self.elevs[fastest].curr_total_time += best_time
             return fastest
+        else:
+            return -1
 
     def update_fastest(self, elev_indx: int, call_indx: int) -> None:
         # Reversing the critical changes:
@@ -73,6 +75,8 @@ class Offline:
 
             if elev.state == LEVEL:
                 elev.curr_total_time = self.init_call_cal(new_call.src, new_call.dst, call_indx, elev_indx, e)
+                elev.call_log[new_call.src - e.min_floor].remove(new_call)
+                elev.call_log[new_call.dst - e.min_floor].remove(new_call)
                 return elev.curr_total_time
 
             # Calculating the first movement to one of the edges:
