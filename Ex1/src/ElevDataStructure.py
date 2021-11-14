@@ -24,3 +24,7 @@ class Structure:
         self.call_log = []
         for i in range(0, e.max_floor - e.min_floor + 1, 1):
             self.call_log.append([])
+
+    def __str__(self):
+        return f"min:{self.min_floor} max:{self.max_floor} addedCalls{self.num_of_calls_added} " \
+               f"passNum:{self.passenger_num}"

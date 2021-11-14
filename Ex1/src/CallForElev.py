@@ -16,3 +16,6 @@ class callForElev:
         self.dst = dst
         self.state = UP if dst > src else DOWN
         self.allocated_to = -1
+
+    def __str__(self):
+        return f"id:{self.id} time:{self.arrive} src:{self.src} dst:{self.dst} allocate:{self.allocated_to}"

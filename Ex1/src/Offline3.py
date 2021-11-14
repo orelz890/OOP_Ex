@@ -29,10 +29,10 @@ class Offline:
         new_call = self.calls[call_indx]
         if (self.b.min_floor <= new_call.src <= self.b.max_floor) \
                 and (self.b.min_floor <= new_call.dst <= self.b.max_floor):
-            fastest = (len(self.elevs) + 1) * random()
+            fastest = int((len(self.elevs) + 1) * random())
             best_time = sys.maxsize
             for i in range(0, len(self.elevs), 1):
-                curr_elev_time = self.time_cal(self.b.elevators[i], i, call_indx)
+                curr_elev_time = self.time_cal(self.b.elevators[i], i, call_indx)   # call_indx -1???
                 if curr_elev_time < best_time:
                     best_time = curr_elev_time
                     fastest = i
@@ -67,16 +67,15 @@ class Offline:
         # Checking if the call is in the elev range:
         if (e.min_floor <= new_call.src <= e.max_floor) \
                 and (e.min_floor <= new_call.src <= e.max_floor):
-            src = new_call.src
-            dst = new_call.dst
             # Dealing with the first ever call of this elev
-            if elev.state == LEVEL:
-                return self.init_call_cal(src, dst, call_indx, elev_indx, e)
-
-            # Calculating the first movement to one of the edges:
             elev.call_log[new_call.src - e.min_floor].append(new_call)
             elev.call_log[new_call.dst - e.min_floor].append(new_call)
-            elev.curr_total_time += self.init_call_cal(elev.init_call.src, elev.init_call.dst, call_indx, elev_indx, e)
+
+            if elev.state == LEVEL:
+                elev.curr_total_time = self.init_call_cal(new_call.src, new_call.dst, call_indx, elev_indx, e)
+                return elev.curr_total_time
+
+            # Calculating the first movement to one of the edges:
             elev.elev_pos_in_time += elev.curr_total_time
 
             # UP case:
@@ -116,22 +115,25 @@ class Offline:
                 flag = True
         if not flag:
             return
-        # Increasing the elev_pos_in_time by one floor time
-        elev.elev_pos_in_time += self.time_cal_helper(elev.elev_pos, i, 0, e)
-        elev.elev_pos = i
 
         for j in range(0, len(elev.call_log[i - elev.min_floor]), 1):
             # Checking if the caller can catch the elev in time
-            if elev.elev_pos_in_time + e.open_time >= elev.call_log[i - elev.min_floor][j].arrive:
-                curr_src = elev.call_log[i - elev.min_floor][j].src
-                curr_dst = elev.call_log[i - elev.min_floor][j].dst
-                print(curr_dst)
+            curr_src = self.calls[elev.call_log[i - elev.min_floor][j].id].src  # problem
+            curr_dst = self.calls[elev.call_log[i - elev.min_floor][j].id].dst  # problem
+
+            if elev.elev_pos_in_time + self.time_cal_helper(elev.elev_pos, i, 1, e) - e.close_time\
+                    >= elev.call_log[i - elev.min_floor][j].arrive:
+                # Increasing the elev_pos_in_time by one floor time
+                elev.elev_pos_in_time += self.time_cal_helper(elev.elev_pos, i, 0, e)
+                elev.elev_pos = i
                 # print(curr_src)
-                curr_call = self.calls[call_indx]
+                # print(curr_src)
+                curr_call = self.calls[elev.call_log[i - elev.min_floor][j].id]
+
                 # If the call is here because its src is in the current pos of the elev:
                 if (elev.elev_pos == curr_src) and (curr_call.done_time == sys.maxsize) \
                         and (curr_call.going_to_dst == -1):
-                    # print(curr_src)
+
                     curr_call.going_to_dst == 1
                     elev.passenger_num += 1
                     elev.elev_pos_in_time += self.time_cal_helper(0, 0, self.elevs[elev_indx].passenger_num, e)
