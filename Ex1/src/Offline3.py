@@ -1,12 +1,11 @@
 import csv
 import sys
-from os import system
 from random import random
 import ElevDataStructure
 from Elevator import Elevator
-from Ex1.src import writeToFile
 from InputCalls import InputCalls
 from Building import Building
+from CallForElev import callForElev
 
 LEVEL = 0
 DOWN = -1
@@ -18,6 +17,7 @@ class Offline:
     def __init__(self, B: str, calls_name: str, out_name: str):
         self.b = Building(B)
         self.calls = InputCalls(calls_name).calls
+        # self.save_to_file(out_name)
         self.elevs = []
         for i in range(0, len(self.b.elevators), 1):
             self.elevs.append(ElevDataStructure.Structure(self.b.elevators[i]))
@@ -59,13 +59,11 @@ class Offline:
         elev = self.elevs[elev_indx]
         new_call = self.calls[call_indx]
         total_time_before_change = elev.curr_total_time
-        new_call.done_time = sys.maxsize
-        new_call.going_to_dst = -1
-        # for i in range(0, len(elev.call_log), 1):
-        #     for j in range(0, len(elev.call_log[i]), 1):
-        #         elev.call_log[i][j].done_time = sys.maxsize
-        #         elev.call_log[i][j].going_to_dst = -1
-
+        for i in range(0, call_indx, 1):
+            self.calls[i].done_time = sys.maxsize
+            self.calls[i].going_to_dst = -1
+        for i in range(0, len(self.elevs[elev_indx].call_log), 1):
+            self.elevs[elev_indx].call_log[i] = []
         # Checking if the call is in the elev range:
         if (e.min_floor <= new_call.src <= e.max_floor) \
                 and (e.min_floor <= new_call.src <= e.max_floor):
@@ -80,16 +78,16 @@ class Offline:
             elev.call_log[new_call.dst - e.min_floor].append(new_call)
             elev.curr_total_time += self.init_call_cal(elev.init_call.src, elev.init_call.dst, call_indx, elev_indx, e)
             elev.elev_pos_in_time += elev.curr_total_time
+
             # UP case:
             if self.elevs[elev_indx].state == UP:
                 for i in range(elev.init_call.src, e.max_floor + 1, 1):
-                    # elev.elev_pos = i
                     self.checking_the_call(e, elev_indx, i, call_indx)
                 self.back_and_forth_check(e, elev_indx, call_indx, DOWN)
+
             # Down case
             elif self.elevs[elev_indx].state == DOWN:
                 for i in range(elev.init_call.src, e.min_floor - 1, -1):
-                    # elev.elev_pos = i
                     self.checking_the_call(e, elev_indx, i, call_indx)
                 self.back_and_forth_check(e, elev_indx, call_indx, UP)
 
@@ -127,7 +125,7 @@ class Offline:
             if elev.elev_pos_in_time + e.open_time >= elev.call_log[i - elev.min_floor][j].arrive:
                 curr_src = elev.call_log[i - elev.min_floor][j].src
                 curr_dst = elev.call_log[i - elev.min_floor][j].dst
-                # print(curr_dst)
+                print(curr_dst)
                 # print(curr_src)
                 curr_call = self.calls[call_indx]
                 # If the call is here because its src is in the current pos of the elev:
@@ -148,6 +146,7 @@ class Offline:
                     curr_call.done_time = elev.elev_pos_in_time
                     elev.num_of_done_calls += 1
                     elev.passenger_num -= 1
+
     def back_and_forth_check(self, e: Elevator, elev_indx: int, call_indx: int, state: int) -> None:
         elev = self.elevs[elev_indx]
         # print(f"added = {elev.num_of_calls_added} done = {elev.num_of_done_calls}")
@@ -161,7 +160,6 @@ class Offline:
             for i in range(e.max_floor, e.min_floor - 1, -1):
                 self.checking_the_call(e, elev_indx, i, call_indx)
             self.back_and_forth_check(e, elev_indx, call_indx, UP)
-
 
     def init_call_cal(self, src: int, dst: int, call_indx: int, elev_indx: int, e: Elevator) -> float:
         elev = self.elevs[elev_indx]

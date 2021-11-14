@@ -11,13 +11,13 @@ class InputCalls:
         try:
             with open(fileName, 'r') as csv_file:
                 csv_reader = csv.DictReader(csv_file)
+                csv_reader.fieldnames = ['str', 'time', 'src', 'dst', 'state', 'aloocate_to']
                 headers = csv_reader.fieldnames
                 c = []
                 i = 0
                 for row in csv_reader:
                     c.append(callForElev(id=i, time=float(row[headers[1]]),
                                          src=int(row[headers[2]]), dst=int(row[headers[3]])))
-                    print((row[headers[2]]))
                     i += 1
                 return c
         except IOError as e:
