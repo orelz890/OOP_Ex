@@ -1,4 +1,3 @@
-
 from Elevator import Elevator
 from CallForElev import callForElev
 
@@ -21,8 +20,7 @@ class Structure:
         self.passenger_num = 0
 
         self.curr_calls = []
-
         self.elev_pos = 0
         self.call_log = []
-        for i in range(0, e.max_floor - e.min_floor, 1):
+        for i in range(0, e.max_floor - e.min_floor + 1, 1):
             self.call_log.append([])
