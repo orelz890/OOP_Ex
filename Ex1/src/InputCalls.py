@@ -1,4 +1,3 @@
-from CallForElev import callForElev
 import csv
 
 
@@ -9,16 +8,13 @@ class InputCalls:
 
     def init_from_file(self, fileName: str):
         try:
-            with open(fileName, 'r') as csv_file:
-                csv_reader = csv.DictReader(csv_file)
-                csv_reader.fieldnames = ['str', 'time', 'src', 'dst', 'state', 'aloocate_to']
-                headers = csv_reader.fieldnames
-                c = []
-                i = 0
-                for row in csv_reader:
-                    c.append(callForElev(id=i, time=float(row[headers[1]]),
-                                         src=int(row[headers[2]]), dst=int(row[headers[3]])))
-                    i += 1
-                return c
+            csv_file = open(fileName)
+            csvreader = csv.reader(csv_file)
+            calls = []
+            for row in csvreader:
+                calls.append(row)
+            csv_file.close()
+            return calls
+
         except IOError as e:
             print(e)
