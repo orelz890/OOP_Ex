@@ -1,16 +1,13 @@
+import csv
+import sys
+
 from Ex1.src.Building import Building
 from Ex1.src.InputCalls import InputCalls
-
-time = 1
-source = 2
-destination = 3
-allocated = 5
 
 DOWN = -1
 REST = 0
 UP = 1
 
-# set permanent variable
 location, status, toSrc, fromSrc, num_of_stops = [], [], [], [], []
 
 
@@ -30,3 +27,25 @@ class Offline:
         with open(out_name, 'w', newline="") as f:
             write = csv.writer(f)
             write.writerows(self.calls)
+
+
+def allocate(self):
+    global allocated_elev
+    for call_i in range(len(self.calls)):
+        src = int(float(self.calls[call_i][2]))
+        dest = int(float(self.calls[call_i][3]))
+        if src > self.max_floor or src < self.min_floor or dest > self.max_floor or dest < self.min_floor:
+            raise Exception("calls have to be in building range!")
+        min_time = sys.maxsize
+        for cur_elev in range(len(self.elevators)):
+            if location[cur_elev] == src:
+                allocated_elev = cur_elev
+                break
+            toSrc.insert(cur_elev, calculateToSrc(self, cur_elev, src))
+            fromSrc.insert(cur_elev, calculateFromSrc(self, dest, cur_elev, src))
+            temp_time = toSrc[cur_elev] + fromSrc[cur_elev]
+            if temp_time < min_time:
+                min_time = temp_time
+                allocated_elev = cur_elev
+        addstops(src, dest, allocated_elev)
+        self.calls[call_i][5] = allocated_elev
