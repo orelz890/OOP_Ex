@@ -35,7 +35,7 @@ def allocate(self):
         src = int(float(self.calls[call_i][2]))
         dest = int(float(self.calls[call_i][3]))
         if src > self.max_floor or src < self.min_floor or dest > self.max_floor or dest < self.min_floor:
-            raise Exception("calls have to be in building range!")
+            raise Exception("Out of the range!")
         min_time = sys.maxsize
         for cur_elev in range(len(self.elevators)):
             if location[cur_elev] == src:
@@ -52,12 +52,38 @@ def allocate(self):
 
 
 def calculateToSrc(self, cur_elev, src):
-    states = statesNumSrc(cur_elev, src)
+    pass_num = PassNumSrc(cur_elev, src)
     dif = abs(location[cur_elev] - src)
-    closeTime = self.elevators[cur_elev].get("_closeTime") * states
-    startTime = self.elevators[cur_elev].get("_startTime") * (states + 1)
-    stopTime = self.elevators[cur_elev].get("_stopTime") * (states + 1)
-    openTime = self.elevators[cur_elev].get("_openTime") * (states + 1)
+    closeTime = self.elevators[cur_elev].get("_closeTime") * pass_num
+    startTime = self.elevators[cur_elev].get("_startTime") * (pass_num + 1)
+    stopTime = self.elevators[cur_elev].get("_stopTime") * (pass_num + 1)
+    openTime = self.elevators[cur_elev].get("_openTime") * (pass_num + 1)
     speed = self.elevators[cur_elev].get("_speed")
     toSrc = closeTime + startTime + dif / speed + stopTime + openTime
     return toSrc
+
+
+def PassNumSrc(cur_elev, src):
+    pass_num = 0
+    if status[cur_elev] != DOWN:
+        for i in range(len(num_of_stops[cur_elev])):
+            if src > num_of_stops[cur_elev][i]:
+                pass_num = pass_num + 1
+    else:
+        for i in range(len(num_of_stops[cur_elev])):
+            if src < num_of_stops[cur_elev][i]:
+                pass_num = pass_num + 1
+    return pass_num
+
+
+def PassNumDest(dest, cur_elev):
+    pass_num = 0
+    if status[cur_elev] != DOWN:
+        for i in range(len(num_of_stops[cur_elev])):
+            if dest > num_of_stops[cur_elev][i]:
+                pass_num = pass_num + 1
+    else:
+        for i in range(len(num_of_stops[cur_elev])):
+            if dest < num_of_stops[cur_elev][i]:
+                pass_num = pass_num + 1
+    return pass_num
