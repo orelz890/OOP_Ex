@@ -49,3 +49,15 @@ def allocate(self):
                 allocated_elev = cur_elev
         addstops(src, dest, allocated_elev)
         self.calls[call_i][5] = allocated_elev
+
+
+def calculateToSrc(self, cur_elev, src):
+    states = statesNumSrc(cur_elev, src)
+    dif = abs(location[cur_elev] - src)
+    closeTime = self.elevators[cur_elev].get("_closeTime") * states
+    startTime = self.elevators[cur_elev].get("_startTime") * (states + 1)
+    stopTime = self.elevators[cur_elev].get("_stopTime") * (states + 1)
+    openTime = self.elevators[cur_elev].get("_openTime") * (states + 1)
+    speed = self.elevators[cur_elev].get("_speed")
+    toSrc = closeTime + startTime + dif / speed + stopTime + openTime
+    return toSrc
