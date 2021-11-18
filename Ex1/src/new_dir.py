@@ -57,26 +57,35 @@ def calculateToSrc(self, cur_elev: int, src: int):
     stops_num = StopsOnWayToSrc(cur_elev, src)
     dif = abs(cur_location[cur_elev] - src)
     speed = self.elevators[cur_elev].get("_speed")
-    closeTime = self.elevators[cur_elev].get("_closeTime") * stops_num
+    closeTime = self.elevators[cur_elev].get("_closeTime")
     startTime = self.elevators[cur_elev].get("_startTime")
     stopTime = self.elevators[cur_elev].get("_stopTime")
     openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToSrc = (dif / speed) + closeTime + (startTime + stopTime + openTime) * (stops_num + 1)
+    TimeToSrc = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
     return TimeToSrc
 
 def calculateFromSrc(self, dest: int, cur_elev: int, src: int):
     stops_num = StopsOnWayFromSrc(dest, cur_elev)
     dif = abs(src - dest)
     speed = self.elevators[cur_elev].get("_speed")
-    closeTime = self.elevators[cur_elev].get("_closeTime") * stops_num
+    closeTime = self.elevators[cur_elev].get("_closeTime")
     startTime = self.elevators[cur_elev].get("_startTime")
     stopTime = self.elevators[cur_elev].get("_stopTime")
     openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToDest = (dif / speed) + closeTime + (startTime + stopTime + openTime) * (stops_num + 1)
+    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
     return TimeToDest
 
 def StopsOnWayFromSrc(dest: int, cur_elev: int):
-    pass
+    stops_num = 0
+    if status[cur_elev] != DOWN:
+        for i in range(len(each_elev_stops[cur_elev])):
+            if dest > each_elev_stops[cur_elev][i]:
+                stops_num += 1
+    else:
+        for i in range(len(each_elev_stops[cur_elev])):
+            if dest < each_elev_stops[cur_elev][i]:
+                stops_num += 1
+    return stops_num
 
 def StopsOnWayToSrc(cur_elev: int, src: int):
     stops_num = 0
