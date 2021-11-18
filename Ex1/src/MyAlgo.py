@@ -49,8 +49,8 @@ def allocate(self):
             if elev["_minFloor"] > src or src > elev["_maxFloor"] \
                     or elev["_minFloor"] > dest or dest > elev["_maxFloor"]:
                 continue
-            to_src_times.insert(cur_elev, calculateToSrc(self, cur_elev, src))
-            from_src_times.insert(cur_elev, calculateFromSrc(self, dest, cur_elev, src))
+            to_src_times.insert(cur_elev, calculate(self, src, cur_elev, cur_location[cur_elev]))
+            from_src_times.insert(cur_elev, calculate(self, dest, cur_elev, src))
             temp_time = to_src_times[cur_elev] + from_src_times[cur_elev]
             if temp_time < min_time:
                 min_time = temp_time
@@ -58,17 +58,18 @@ def allocate(self):
         PickUp(src, dest, allocated_elev)
         self.calls[call_num][5] = allocated_elev
 
-
-def calculateToSrc(self, cur_elev: int, src: int):
-    stops_num = StopsOnWayToSrc(cur_elev, src)
-    dif = abs(cur_location[cur_elev] - src)
+def calculate(self, dest: int, cur_elev: int, src: int):
+    stops_num = StopsOnWayFromSrc(dest, cur_elev)
+    max = src if src > dest else dest
+    min = src if src < dest else dest
+    dif = max - min
     speed = self.elevators[cur_elev].get("_speed")
     closeTime = self.elevators[cur_elev].get("_closeTime")
     startTime = self.elevators[cur_elev].get("_startTime")
     stopTime = self.elevators[cur_elev].get("_stopTime")
     openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToSrc = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
-    return TimeToSrc
+    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
+    return TimeToDest
 
 
 def StopsOnWayToSrc(cur_elev: int, src: int):
@@ -82,18 +83,6 @@ def StopsOnWayToSrc(cur_elev: int, src: int):
             if src < each_elev_stops[cur_elev][i]:
                 stops_num += 1
     return stops_num
-
-
-def calculateFromSrc(self, dest: int, cur_elev: int, src: int):
-    stops_num = StopsOnWayFromSrc(dest, cur_elev)
-    dif = abs(src - dest)
-    speed = self.elevators[cur_elev].get("_speed")
-    closeTime = self.elevators[cur_elev].get("_closeTime")
-    startTime = self.elevators[cur_elev].get("_startTime")
-    stopTime = self.elevators[cur_elev].get("_stopTime")
-    openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
-    return TimeToDest
 
 
 def StopsOnWayFromSrc(dest: int, cur_elev: int):
