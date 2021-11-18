@@ -45,6 +45,10 @@ def allocate(self):
             if cur_location[cur_elev] == src:
                 allocated_elev = cur_elev
                 break
+            elev = self.elevators[cur_elev]
+            if elev["_minFloor"] > src or src > elev["_maxFloor"] \
+                    or elev["_minFloor"] > dest or dest > elev["_maxFloor"]:
+                continue
             to_src_times.insert(cur_elev, calculateToSrc(self, cur_elev, src))
             from_src_times.insert(cur_elev, calculateFromSrc(self, dest, cur_elev, src))
             temp_time = to_src_times[cur_elev] + from_src_times[cur_elev]
@@ -118,4 +122,4 @@ def PickUp(src: int, dest: int, allocated_elev: int):
 
 
 if __name__ == '__main__':
-    Offline("B1.json", "Calls_a.csv", "out_33.csv")
+    Offline("B5.json", "Calls_d.csv", "out_33.csv")
