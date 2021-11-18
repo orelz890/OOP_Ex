@@ -43,6 +43,6 @@ When the algorithem has finished, we are left with an updated call list.
 last, make an updated csv file containing the answers.
 
 How to run the code in cmd after running the program from MyAlgo.py on pycharm:
-java -jar Ex1_checker_V1.2_obf.jar 1111,2222,3333 B5.json out_33.csv out.log
+<FOLDER PATH> java -jar Ex1_checker_V1.2_obf.jar 1111,2222,3333 B5.json out_33.csv out.log
 
 
