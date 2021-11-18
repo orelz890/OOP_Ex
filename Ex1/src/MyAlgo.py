@@ -58,8 +58,9 @@ def allocate(self):
         PickUp(src, dest, allocated_elev)
         self.calls[call_num][5] = allocated_elev
 
+
 def calculate(self, dest: int, cur_elev: int, src: int):
-    stops_num = StopsOnWayFromSrc(dest, cur_elev)
+    stops_num = StopsOnWayToDst(cur_elev, dest)
     max = src if src > dest else dest
     min = src if src < dest else dest
     dif = max - min
@@ -72,28 +73,15 @@ def calculate(self, dest: int, cur_elev: int, src: int):
     return TimeToDest
 
 
-def StopsOnWayToSrc(cur_elev: int, src: int):
+def StopsOnWayToDst(cur_elev: int, dst: int):
     stops_num = 0
     if status[cur_elev] != DOWN:
         for i in range(len(each_elev_stops[cur_elev])):
-            if src > each_elev_stops[cur_elev][i]:
+            if dst > each_elev_stops[cur_elev][i]:
                 stops_num += 1
     else:
         for i in range(len(each_elev_stops[cur_elev])):
-            if src < each_elev_stops[cur_elev][i]:
-                stops_num += 1
-    return stops_num
-
-
-def StopsOnWayFromSrc(dest: int, cur_elev: int):
-    stops_num = 0
-    if status[cur_elev] != DOWN:
-        for i in range(len(each_elev_stops[cur_elev])):
-            if dest > each_elev_stops[cur_elev][i]:
-                stops_num += 1
-    else:
-        for i in range(len(each_elev_stops[cur_elev])):
-            if dest < each_elev_stops[cur_elev][i]:
+            if dst < each_elev_stops[cur_elev][i]:
                 stops_num += 1
     return stops_num
 
