@@ -32,12 +32,16 @@ First of all, a couple of rouls:
 2. An elevator can not wait for a passenger more then the open doors time.
 3. All the elevators start position is on the 0 floor(LEVEL).
 4. The elevator has no passengers limit.
-5. 
 
-The "Offline" algo will run through all the calls and calculate who is the most afficient elevator.
-by running through all the elevator in the building and ask how much time does it take to this specific elevator to complete the current call.
-The calculation will consider the open/close time + start/stop time multiplied by the number of passengers on it for eatch stop,
-plus the time it takes to get to src and from src to dst.
+The "Offline" algorithem will run through all the calls, and calculate which elevator is the most afficient elevator.
+By running through all the elevators in the building and asking, how much time does it take to this specific elevator to complete the current call.
+The calculation will consider the open/close time + start/stop time multiplied by the number of passengers on it, for eatch stop.
+Plus the time it takes to get to src and from src to dst.
 If the answer is lower than the currnt most afficient elev, update the most afficient.
+Update the current call allocate_to value to the most afficient.
+When the algorithem has finished, we are left with an updated call list.
+last, make an updated csv file containing the answers.
+
+
 
 
