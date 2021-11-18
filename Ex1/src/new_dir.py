@@ -13,6 +13,7 @@ to_src_times = []
 from_src_times = []
 each_elev_stops = []
 
+
 class Offline:
 
     def __init__(self, jsonfile: str, calls_name: str, out_name: str):
@@ -32,6 +33,7 @@ class Offline:
                 write.writerows(self.calls)
         except IOError as e:
             print(e)
+
 
 def allocate(self):
     for call_num in range(len(self.calls)):
@@ -64,6 +66,7 @@ def calculateToSrc(self, cur_elev: int, src: int):
     TimeToSrc = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
     return TimeToSrc
 
+
 def calculateFromSrc(self, dest: int, cur_elev: int, src: int):
     stops_num = StopsOnWayFromSrc(dest, cur_elev)
     dif = abs(src - dest)
@@ -74,6 +77,7 @@ def calculateFromSrc(self, dest: int, cur_elev: int, src: int):
     openTime = self.elevators[cur_elev].get("_openTime")
     TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
     return TimeToDest
+
 
 def StopsOnWayFromSrc(dest: int, cur_elev: int):
     stops_num = 0
@@ -86,6 +90,7 @@ def StopsOnWayFromSrc(dest: int, cur_elev: int):
             if dest < each_elev_stops[cur_elev][i]:
                 stops_num += 1
     return stops_num
+
 
 def StopsOnWayToSrc(cur_elev: int, src: int):
     stops_num = 0
