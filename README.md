@@ -27,6 +27,13 @@ and last ,creat a function that stores all the answers into a csv file
 
 algoritem:
 lets assume that all the above is already implemented.
+First of all, a couple of rouls:
+1. Our solution is based on the status of the elevator. Meaning, if the elevator status is UP for example it can only pick up UP calls.
+2. An elevator can not wait for a passenger more then the open doors time.
+3. All the elevators start position is on the 0 floor(LEVEL).
+4. The elevator has no passengers limit.
+5. 
+
 The "Offline" algo will run through all the calls and calculate who is the most afficient elevator.
 by running through all the elevator in the building and ask how much time does it take to this specific elevator to complete the current call.
 The calculation will consider the open/close time + start/stop time multiplied by the number of passengers on it for eatch stop,
