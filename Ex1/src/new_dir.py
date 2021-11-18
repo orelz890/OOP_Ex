@@ -63,8 +63,21 @@ def calculateToSrc(self, cur_elev: int, src: int):
     startTime = self.elevators[cur_elev].get("_startTime")
     stopTime = self.elevators[cur_elev].get("_stopTime")
     openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToSrc = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
+    TimeToSrc = (dif / speed) + (closeTime + startTime + stopTime + openTime) * stops_num
     return TimeToSrc
+
+
+def StopsOnWayToSrc(cur_elev: int, src: int):
+    stops_num = 0
+    if status[cur_elev] != DOWN:
+        for i in range(len(each_elev_stops[cur_elev])):
+            if src > each_elev_stops[cur_elev][i]:
+                stops_num += 1
+    else:
+        for i in range(len(each_elev_stops[cur_elev])):
+            if src < each_elev_stops[cur_elev][i]:
+                stops_num += 1
+    return stops_num
 
 
 def calculateFromSrc(self, dest: int, cur_elev: int, src: int):
@@ -75,7 +88,7 @@ def calculateFromSrc(self, dest: int, cur_elev: int, src: int):
     startTime = self.elevators[cur_elev].get("_startTime")
     stopTime = self.elevators[cur_elev].get("_stopTime")
     openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
+    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * stops_num
     return TimeToDest
 
 
@@ -92,18 +105,17 @@ def StopsOnWayFromSrc(dest: int, cur_elev: int):
     return stops_num
 
 
-def StopsOnWayToSrc(cur_elev: int, src: int):
-    stops_num = 0
-    if status[cur_elev] != DOWN:
-        for i in range(len(each_elev_stops[cur_elev])):
-            if src > each_elev_stops[cur_elev][i]:
-                stops_num += 1
-    else:
-        for i in range(len(each_elev_stops[cur_elev])):
-            if src < each_elev_stops[cur_elev][i]:
-                stops_num += 1
-    return stops_num
-
-
 def PickUp(src: int, dest: int, allocated_elev: int):
-    pass
+    each_elev_stops[allocated_elev].append(src)
+    each_elev_stops[allocated_elev].append(dest)
+    if src < dest:
+        if len(each_elev_stops[allocated_elev]) == 0:
+            status[allocated_elev] = UP
+    else:
+        if len(each_elev_stops[allocated_elev]) == 0:
+            status[allocated_elev] = DOWN
+    cur_location[allocated_elev] = dest
+
+
+if __name__ == '__main__':
+    Offline("B4.json", "Calls_d.csv", "out_33.csv")

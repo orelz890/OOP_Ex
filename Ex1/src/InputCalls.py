@@ -4,17 +4,18 @@ import csv
 class InputCalls:
 
     def __init__(self, fileCalls: str):
-        self.calls = self.init_from_file(fileCalls)
+        self.calls = init_from_file(fileCalls)
 
-    def init_from_file(self, fileName: str):
-        try:
-            csv_file = open(fileName)
-            csvreader = csv.reader(csv_file)
-            calls = []
-            for row in csvreader:
-                calls.append(row)
-            csv_file.close()
-            return calls
 
-        except IOError as e:
-            print(e)
+def init_from_file(fileName: str):
+    try:
+        calls_csv = open(fileName)
+        csvreader = csv.reader(calls_csv)
+        calls = []
+        for row in csvreader:
+            calls.append(row)
+        calls_csv.close()
+        return calls
+
+    except IOError as e:
+        print(e)
