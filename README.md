@@ -1,4 +1,4 @@
-# OOP_Ex
+# OOP_Ex1
 
 This project is an assignment in the object-oriented course at Ariel University(second year).
 The problem in general:
