@@ -1,4 +1,3 @@
-from writeToFile import Write
 from new_dir import Offline
 
 if __name__ == '__main__':
