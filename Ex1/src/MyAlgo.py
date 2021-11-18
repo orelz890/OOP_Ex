@@ -41,10 +41,8 @@ def allocate(self):
         dest = int(self.calls[call_num][3])
         min_time = sys.maxsize
         number_of_elev = len(self.elevators)
+        allocated_elev = 0
         for cur_elev in range(number_of_elev):
-            if cur_location[cur_elev] == src:
-                allocated_elev = cur_elev
-                break
             elev = self.elevators[cur_elev]
             if elev["_minFloor"] > src or src > elev["_maxFloor"] \
                     or elev["_minFloor"] > dest or dest > elev["_maxFloor"]:
@@ -52,6 +50,9 @@ def allocate(self):
             to_src_times.insert(cur_elev, calculate(self, src, cur_elev, cur_location[cur_elev]))
             from_src_times.insert(cur_elev, calculate(self, dest, cur_elev, src))
             temp_time = to_src_times[cur_elev] + from_src_times[cur_elev]
+            totalTime = float(self.calls[call_num][1]) + to_src_times[cur_elev]
+            if call_num != (len(self.calls))-1 and totalTime < float(self.calls[call_num+1][1]):
+                continue
             if temp_time < min_time:
                 min_time = temp_time
                 allocated_elev = cur_elev
@@ -69,7 +70,7 @@ def calculate(self, dest: int, cur_elev: int, src: int):
     startTime = self.elevators[cur_elev].get("_startTime")
     stopTime = self.elevators[cur_elev].get("_stopTime")
     openTime = self.elevators[cur_elev].get("_openTime")
-    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * (stops_num)
+    TimeToDest = (dif / speed) + (closeTime + startTime + stopTime + openTime) * stops_num
     return TimeToDest
 
 
