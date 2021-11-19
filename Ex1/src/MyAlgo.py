@@ -1,14 +1,12 @@
 import csv
 import sys
 from random import random
-
 from Ex1.src.Building import Building
 from Ex1.src.InputCalls import InputCalls
 
 DOWN = -1
 LEVEL = 0
 UP = 1
-
 cur_location = []
 status = []
 to_src_times = []
@@ -117,4 +115,4 @@ def PickUp(src: int, dest: int, allocated_elev: int):
 
 
 if __name__ == '__main__':
-    Offline("B2.json", "Calls_c.csv", "out_33.csv")
+    Offline("B5.json", "Calls_d.csv", "out_33.csv")
