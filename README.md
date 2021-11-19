@@ -49,4 +49,4 @@ Lastly, make an updated csv file containing the answers.
 ![Ex1_Results](https://user-images.githubusercontent.com/93476230/142611659-645b27ed-be73-4c9d-a8e2-207ecb0841b5.png)
    
 **UML:**
-![Ex1_UML](https://user-images.githubusercontent.com/93476230/142623909-3e1ead53-698f-46a1-8cdd-e38b5a1cb2cb.png)
+![Ex1_UML](https://user-images.githubusercontent.com/93476230/142624492-b4a53e6a-d3db-4d09-ab3b-b8a68e7d8d08.png)
