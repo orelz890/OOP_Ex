@@ -43,3 +43,6 @@ Lastly, make an updated csv file containing the answers.
 How to run the code in cmd after running the program from MyAlgo.py on pycharm:
 
 <FOLDER PATH> java -jar Ex1_checker_V1.2_obf.jar 1111,2222,3333 B5.json out_33.csv out.log
+
+**Results:** 
+![Ex1_Results](https://user-images.githubusercontent.com/93476230/142611659-645b27ed-be73-4c9d-a8e2-207ecb0841b5.png)
