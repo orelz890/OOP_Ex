@@ -46,3 +46,7 @@ How to run the code in cmd after running the program from MyAlgo.py on pycharm:
 
 **Results:** 
 ![Ex1_Results](https://user-images.githubusercontent.com/93476230/142611659-645b27ed-be73-4c9d-a8e2-207ecb0841b5.png)
+   
+**UML:**
+![Ex1_UML](https://user-images.githubusercontent.com/93476230/142623909-3e1ead53-698f-46a1-8cdd-e38b5a1cb2cb.png)
+
