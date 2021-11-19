@@ -6,14 +6,14 @@ and a csv file named "Calls_*.csv". The first contains all the relevant data abo
 floor and a list of elevators (with the relevant data about them). The second stores the future calls in a specified 
 time. 
 
-Research of useful related sites:
+**Research of useful related sites:**
 
 1. https://dergipark.org.tr/tr/download/article-file/539296
 2. https://codereview.stackexchange.com/questions/7990/elevator-program 
 3. https://github.com/joeblau/sample-elevator-control-system/blob/master/src/main/java/com/joeblau/ecs/impl/Elevator.java
 4. https://www.popularmechanics.com/technology/infrastructure/a20986/the-hidden-science-of-elevators/
 
-Our mission:
+**Our mission:**
 assigning the most efficient elevator to all the input calls, meaning reducing the waiting time to a minimum.
 and returning a csv file (same format) with the allocate changes for each call. 
 
@@ -23,7 +23,8 @@ the answer to the algorithm problem, named "Offline". Third, creat a function th
 efficient elevator to a specific call. Fourth, creat the calculating function. Last ,creat a function that stores 
 all the answers into a csv file.
 
-algorithm: lets assume that all the above is already implemented. First of all, a couple of rolls:
+**Algorithm:**
+Lets assume that all the above is already implemented. First of all, a couple of rolls:
 1. Our solution is based on the status of the elevator. Meaning, if the elevator status is UP for example
    it can only pick up UP calls. 
 2. An elevator can not wait for a passenger more then the open doors time.
@@ -40,13 +41,12 @@ When the loop has finished, update the current call allocate_to value to the cur
 When the algorithm has finished, we are left with an updated call list.
 Lastly, make an updated csv file containing the answers.
 
-How to run the code in cmd after running the program from MyAlgo.py on pycharm:
+**How to run the code in cmd after running the program from MyAlgo.py on pycharm:**
 
 <FOLDER PATH> java -jar Ex1_checker_V1.2_obf.jar 1111,2222,3333 B5.json out_33.csv out.log
 
-**Results:** 
+**Results:**
 ![Ex1_Results](https://user-images.githubusercontent.com/93476230/142611659-645b27ed-be73-4c9d-a8e2-207ecb0841b5.png)
    
 **UML:**
 ![Ex1_UML](https://user-images.githubusercontent.com/93476230/142623909-3e1ead53-698f-46a1-8cdd-e38b5a1cb2cb.png)
-
