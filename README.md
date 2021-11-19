@@ -17,7 +17,7 @@ time.
 assigning the most efficient elevator to all the input calls, meaning reducing the waiting time to a minimum.
 and returning a csv file (same format) with the allocate changes for each call. 
 
-structure: lets brake the problem to pieces. First, create a class that receives the input csv information, 
+**structure:** lets brake the problem to pieces. First, create a class that receives the input csv information, 
 named "InputCalls" && a class for the json file, named "Building". Second, creat a class that returns a csv file with 
 the answer to the algorithm problem, named "Offline". Third, creat a function that calculates && returns the most 
 efficient elevator to a specific call. Fourth, creat the calculating function. Last ,creat a function that stores 
